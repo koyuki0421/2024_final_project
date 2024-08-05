@@ -24,10 +24,15 @@ const seedDB = async () => {
     for (let i = 0; i < 50; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         // 如果 cities 數組包含 1000 個元素，索引範圍應該是 0 到 999，所以後面不用+1
+        const price = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
-            title: `${sample(descriptors)} ${sample(places)}`
+            title: `${sample(descriptors)} ${sample(places)}`,
             // 把參數descriptors跟places給sample這個函數
+            image: `https://picsum.photos/400?random=${Math.random()}`,
+            // 400 是圖片的寬度、表每次都可以得到不同的圖片(https://unsplash.com/collections/483251/in-the-woods)
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam dolores vero perferendis laudantium, consequuntur voluptatibus nulla architecto, sit soluta esse iure sed labore ipsam a cum nihil atque molestiae deserunt!',
+            price
         })
         await camp.save();
     }
