@@ -3,7 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', true); // 預防在git上有警告訊息跳出來
 const ejsMate = require('ejs-mate');
-// const { campgroundSchema } = require('./schemas.js');
+const { campgroundSchema } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -32,9 +32,10 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true })); // 解析post出來的東西
 app.use(methodOverride('_method'));
 
-
+// 這是一個中間件Middleware，
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
+    // 這個campgroundSchema.validate要驗證這個req.body
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
@@ -54,6 +55,7 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new');
 })
 
+// 在路徑與(req,res,next)中間插入自訂的中間件，以驗證發布的東西不可為空值且類別正確
 app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
@@ -71,6 +73,7 @@ app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     res.render('campgrounds/edit', { campground });
 }))
 
+// 在路徑與(req,res,next)中間插入自訂的中間件，以驗證修改的東西不可為空值且類別正確
 app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
@@ -89,7 +92,7 @@ app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
 
-// 最終error的把關
+// '全局錯誤處理'最終error的把關
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!'
