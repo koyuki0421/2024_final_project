@@ -75,7 +75,7 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 }))
 
 app.get('/campgrounds/:id', catchAsync(async (req, res,) => {
-    const campground = await Campground.findById(req.params.id)
+    const campground = await Campground.findById(req.params.id).populate('reviews');
     res.render('campgrounds/show', { campground });
 }));
 
@@ -110,7 +110,9 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
 app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    // $pull 是 MongoDB 的一個操作符，它的作用是從一個array中移除符合條件的元素。
     await Review.findByIdAndDelete(reviewId);
+    // 刪除 Review array中 ID 為 reviewId 的評論。
     res.redirect(`/campgrounds/${id}`);
 }))
 
