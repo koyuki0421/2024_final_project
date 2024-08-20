@@ -7,10 +7,14 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
 // 設定router
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+const userRoutes = require('./routes/users');
+const campgroundRoutes = require('./routes/campgrounds');
+const reviewRoutes = require('./routes/reviews');
 
 // 連線mongoosDB = yelp-camp
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -59,20 +63,36 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash());
 
-// 設定通用flash中間件
+app.use(passport.initialize());
+// 用來初始化 Passport 中間件。它是設置 Passport 在 Express 應用中進行身份驗證的第一步。
+// 這個中間件將 Passport 與你的應用綁定，使得後續的身份驗證過程可以運行。
+app.use(passport.session());
+// 用來讓 Passport 處理基於會話的身份驗證。它依賴於 express-session 中間件
+// 可以跨多個請求保持用戶的登錄狀態。
+passport.use(new LocalStrategy(User.authenticate()));
+// User是模型名稱、.authenticate()是自動添加的靜態函數
+passport.serializeUser(User.serializeUser());
+// .serializeUser表序列化，意思是在session中儲存user
+passport.deserializeUser(User.deserializeUser());
+// .deserializeUser就是反序列化，意思再把user退出session
+
+// 設定通用flash中間件、local表可讓所有ejs模板中訪問
 app.use((req, res, next) => {
+    console.log(req.session)
+    res.locals.currentUser = req.user; // 有權利去訪問當前user
+    // req.user:是由 Passport.js 添加到請求對象 (req) 中的屬性，表示當前已經驗證的用戶。
+    // 將包含該用戶的詳細信息（如用戶名、ID 等）；未通過身份驗證，則該屬性為 undefined
     res.locals.success = req.flash('success');
     // 將 req.flash('success') 的值存儲在 res.locals 對象中，
     // 再傳遞給模板引擎（如 EJS、Pug 等）以便在渲染的頁面中顯示
     res.locals.error = req.flash('error');
-    next();
-    
+    next();    
 })
 
 // 加router
-app.use('/campgrounds', campgrounds)
-app.use('/campgrounds/:id/reviews', reviews)
-
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundRoutes)
+app.use('/campgrounds/:id/reviews', reviewRoutes)
 
 app.get('/', (req, res) => {
     res.render('home')

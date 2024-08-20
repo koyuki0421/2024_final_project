@@ -3,6 +3,7 @@ const router = express.Router();
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { campgroundSchema } = require('../schemas.js');
+const { isLoggedIn } = require('../middleware');
 const Campground = require('../models/campground');
 
 // 這是一個中間件Middleware，
@@ -22,18 +23,19 @@ router.get('/', catchAsync(async (req, res) => {
     res.render('campgrounds/index', { campgrounds })
 }));
 
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn, (req, res) => {
     res.render('campgrounds/new');
 })
 
 // 在路徑與(req,res,next)中間插入自訂的中間件，以驗證發布的東西不可為空值且類別正確
-router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/',isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
     await campground.save();
     req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }))
+
 
 router.get('/:id', catchAsync(async (req, res,) => {
     const campground = await Campground.findById(req.params.id).populate('reviews');
@@ -44,7 +46,7 @@ router.get('/:id', catchAsync(async (req, res,) => {
     res.render('campgrounds/show', { campground });
 }));
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn,catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     if (!campground) {
         req.flash('error', 'Cannot find that campground!');
@@ -54,7 +56,7 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
 }))
 
 // 在路徑與(req,res,next)中間插入自訂的中間件，以驗證修改的東西不可為空值且類別正確
-router.put('/:id', validateCampground, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn,validateCampground, catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     // 展開運算符 ... 將 req.body.campground 的所有屬性展開並傳遞給 findByIdAndUpdate。
@@ -62,7 +64,7 @@ router.put('/:id', validateCampground, catchAsync(async (req, res) => {
     res.redirect(`/campgrounds/${campground._id}`)
 }));
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn,catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted campground')
