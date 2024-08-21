@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
+const { storeReturnTo } = require('../middleware');
 
 router.get('/register', (req, res) => {
     res.render('users/register');
@@ -34,10 +35,12 @@ router.get('/login', (req, res) => {
 // 使用了 local 策略，表示應用會用本地驗證策略來驗證用戶的憑據（通常是用戶名和密碼）
 // failureFlash: true：如果身份驗證失敗，會使用 req.flash() 來顯示錯誤消息
 // failureRedirect: '/login'：如果身份驗證失敗，用戶會被重定向到 /login 頁面
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+router.post('/login', storeReturnTo,passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
     req.flash('success', 'welcome back!');
-    const redirectUrl = req.session.returnTo || '/campgrounds';
+    const redirectUrl = res.locals.returnTo || '/campgrounds';
+    // 當post login後，去returnTo原本所在頁面的url，否則就去/campgrounds
     delete req.session.returnTo;
+    // 這邊delete session而不是locals是因為只存在當前需求中，當用過後會自動刪除
     res.redirect(redirectUrl);
 })
 
