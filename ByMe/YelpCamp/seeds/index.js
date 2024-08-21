@@ -26,6 +26,7 @@ const seedDB = async () => {
         // 如果 cities 數組包含 1000 個元素，索引範圍應該是 0 到 999，所以後面不用+1
         const price = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
+            author: '5f5c330c2cd79d538f2c66d9',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             // 把參數descriptors跟places給sample這個函數
