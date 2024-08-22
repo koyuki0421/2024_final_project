@@ -27,10 +27,13 @@ router.post('/',isLoggedIn, validateCampground, catchAsync(async (req, res, next
 
 router.get('/:id', catchAsync(async (req, res,) => {
     const campground = await Campground.findById(req.params.id).populate({
+        // 第一個path是在同一個露營地顯示出所有reviews、
+        // 在這其中再populate另一個path是author，表顯示出每一個reviews的author
         path: 'reviews',
         populate: {
             path: 'author'
         }
+    // 而下面這個pupulate是顯示出此露營地是哪個author創建的
     }).populate('author');
     console.log(campground);
     if (!campground) {
@@ -50,7 +53,7 @@ router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
     res.render('campgrounds/edit', { campground });
 }))
 
-// 在路徑與(req,res,next)中間插入自訂的中間件，以驗證修改的東西不可為空值且類別正確
+// 在路徑與(req,res,next)中間插入自訂的中間件validateCampground，以驗證修改的東西不可為空值且類別正確
 router.put('/:id', isLoggedIn, isAuthor,validateCampground, catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });

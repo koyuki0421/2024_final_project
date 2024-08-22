@@ -13,6 +13,7 @@
                 <li class="list-group-item">Submitted by <%= campground.author.username%></li>
                 <li class="list-group-item">$<%= campground.price%>/night</li>
             </ul>
+            <!-- 如果目前登入的id與創建露營地的id相同的話，才能進行編輯 -->
             <%  if( currentUser && campground.author.equals(currentUser._id))  {%>
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
@@ -27,6 +28,7 @@
         </div>
     </div>
     <div class="col-6">
+        <!-- 如果有登入才可以留下評論 -->
         <% if(currentUser){ %>
         <h2>Leave a Review</h2>
         <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -51,6 +53,7 @@
                 <h5 class="card-title">Rating: <%= review.rating %></h5>
                 <h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6>
                 <p class="card-text">Review: <%= review.body %></p>
+                <!-- 限制只有自己創建的review才看的到delete button -->
                 <%  if( currentUser && review.author.equals(currentUser._id))  {%>
                 <form action="/campgrounds/<%=campground._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-sm btn-danger">Delete</button>
