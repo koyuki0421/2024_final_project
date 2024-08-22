@@ -25,6 +25,7 @@ module.exports.storeReturnTo = (req, res, next) => {
     next();
 }
 
+// 以驗證發布的東西不可為空值且類別正確
 module.exports.validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
     // 這個campgroundSchema.validate要驗證這個req.body
