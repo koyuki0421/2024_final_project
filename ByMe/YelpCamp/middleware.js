@@ -36,6 +36,7 @@ module.exports.validateCampground = (req, res, next) => {
     }
 }
 
+// 去授權處理，當前登入者是否有權利刪除修改露營地
 module.exports.isAuthor = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
@@ -46,6 +47,7 @@ module.exports.isAuthor = async (req, res, next) => {
     next();
 }
 
+// 去授權處理，留言者的id與當前登入者的id是否相同，才可以進行留言刪除動作
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params;
     const review = await Review.findById(reviewId);
