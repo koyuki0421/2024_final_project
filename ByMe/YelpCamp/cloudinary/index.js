@@ -1,4 +1,6 @@
+// https://www.npmjs.com/package/cloudinary
 const cloudinary = require('cloudinary').v2;
+// https://www.npmjs.com/package/multer-storage-cloudinary
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 cloudinary.config({

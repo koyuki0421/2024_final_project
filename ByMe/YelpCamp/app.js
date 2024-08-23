@@ -1,3 +1,9 @@
+// 用來在開發環境中載入環境變數，有development（開發環境）或production（生產環境）
+// 若次開發環境的話，會載入 dotenv 模組並執行它的 config() 方法
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');

@@ -3,7 +3,9 @@ const router = express.Router();
 const campgrounds = require('../controllers/campgrounds');
 const catchAsync = require('../utils/catchAsync');
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
-const Campground = require('../models/campground');
+const multer = require('multer'); //處理上傳檔案所需的節點包
+const { storage } = require('../cloudinary');  //儲存照片在cloudinary上
+const upload = multer({ storage });
 
 // 同一個路徑的可以寫成router.route('同樣路徑')，再去.get.post等
 // 注意要連結東西的話就不用放分號(;)
