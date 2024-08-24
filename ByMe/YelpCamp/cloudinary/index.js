@@ -13,7 +13,8 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'YelpCamp',
-        allowedFormats: ['jpeg', 'png', 'jpg']
+        allowedFormats: ['jpeg', 'png', 'jpg','mp4', 'avi', 'mov'],
+        resource_type: 'auto' // 自动识别文件类型（图片、视频等）
     }
 });
 

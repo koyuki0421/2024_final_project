@@ -20,6 +20,7 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createCampground = async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
+    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     await campground.save();
     req.flash('success', 'Successfully made a new campground!');
@@ -93,9 +94,11 @@ module.exports.updateCampground = async (req, res) => {
     await campground.save();
     if (req.body.deleteImages) {
         for (let filename of req.body.deleteImages) {
-            await cloudinary.uploader.destroy(filename);
+            await cloudinary.uploader.destroy(filename); // 在cloudinary上刪除特定的圖片
         }
         await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+        // 從 campground.images 陣列中刪除所有 filename 屬性在 req.body.deleteImages 陣列中的圖片對象
+        // $pull 會移除這些 filename 對應的圖片對象。
     }
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)

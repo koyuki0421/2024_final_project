@@ -15,7 +15,7 @@
     <!-- display-flex 與 view height的意思 -->
     <%- include('../partials/navbar')%>
     <main class="container mt-5">
-        <%- include('../partials/flash')%>
+        <%- include('../partials/flash')%> 
         <%- body %>
         </main>
         <%- include('../partials/footer')%>
@@ -25,10 +25,12 @@
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
                 integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
                 crossorigin="anonymous"></script>
+            <!-- 這是為了要顯示上傳照片後，自動跳出照片的名稱在欄位裡 -->
+            <!-- https://www.npmjs.com/package/bs-custom-file-input -->
+             <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 
             <!-- 這個是為了驗證要加的script -->
             <!-- https://getbootstrap.com/docs/5.3/forms/validation/ -->
-
             <script src='/javascripts/validateForms.js'></script>
 
 </body>
