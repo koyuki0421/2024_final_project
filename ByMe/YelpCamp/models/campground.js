@@ -18,6 +18,18 @@ ImageSchema.virtual('thumbnail').get(function () {
 const CampgroundSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'], // 定義了 type 欄位只能是 'Point'
+            // enum 提供了一種簡單的方法來限制欄位的值，使得資料更加可靠和一致。
+            required: true
+        },
+        coordinates: {  // ex經緯度 = [-122.3301, 47.6038]
+            type: [Number],
+            required: true
+        }
+    },
     price: Number,
     description: String,
     location: String,

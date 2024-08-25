@@ -1,5 +1,8 @@
 const Campground = require('../models/campground');
 const { cloudinary } = require("../cloudinary");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
@@ -19,10 +22,16 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createCampground = async (req, res, next) => {
     // if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.campground.location,  // query會是創建新露營地的時候在location欄位輸入的資料
+        limit: 1  // 只回傳1個結果 = 經緯度
+    }).send()
     const campground = new Campground(req.body.campground);
+    campground.geometry = geoData.body.features[0].geometry; // 存地理API，features[0]是因為limit只有1個所以索引是0
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     await campground.save();
+    console.log(campground);
     req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }

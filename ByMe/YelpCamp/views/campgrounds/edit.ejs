@@ -57,16 +57,26 @@
                         </label>
                     </div>
                 </div>
-                <!-- FIXME 要在刪除的時候也呈現影片的縮圖 -->
                 <div class="mb-3">
                     <% campground.images.forEach(function(img, i) { %>
-                        <img src="<%=img.thumbnail %>" class="img-thumbnail" alt=""> <!-- img-thumbnail表縮圖 -->
+                        <!-- 判斷是圖片還是影片，並顯示相應的縮圖 -->
+                        <% if (img.url.match(/\.(jpeg|jpg|png)$/)) { %>
+                            <img src="<%= img.thumbnail %>" class="img-thumbnail" alt=""> <!-- img-thumbnail表縮圖 -->
+                        <% } else if (img.url.match(/\.(mp4|avi|mov)$/)) { %>
+                            <video class="img-thumbnail" controls>
+                                <source src="<%= img.thumbnail %>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        <% } %>
+                    
+                        <!-- 顯示刪除選項 -->
                         <div class="form-check-inline">
                             <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
                         </div>
                         <label for="image-<%=i%>">Delete?</label> <!-- label的for要跟input的id一樣，都是image-index -->
                         <% })%>
                 </div>
+
                 <div class="mb-3">
                     <button class="btn btn-info">Update Campground</button>
                 </div>
