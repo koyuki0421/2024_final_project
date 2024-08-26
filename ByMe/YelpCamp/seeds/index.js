@@ -22,7 +22,7 @@ const sample = array => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
     await Campground.deleteMany({});
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 300; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         // 如果 cities 數組包含 1000 個元素，索引範圍應該是 0 到 999，所以後面不用+1
         const price = Math.floor(Math.random() * 20) + 10;
@@ -37,28 +37,22 @@ const seedDB = async () => {
             price,
             geometry: {
                 type: "Point",
-                coordinates: [-113.1331, 47.0202]
+                coordinates: [  // 經度要先再緯度
+                    cities[random1000].longitude,
+                    cities[random1000].latitude,
+                ]
             },
             images: [
-                // {
-                //     url: 'https://res.cloudinary.com/drldzfy40/image/upload/v1724490320/YelpCamp/kmndhlbuaet278lte4eq.png',
-                //     filename: 'YelpCamp/kmndhlbuaet278lte4eq'
-                // },
+                {
+                    url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png', 
+                    filename: 'YelpCamp/kmndhlbuaet278lte4eq'
+                }
                 // {
                 //     url: 'https://res.cloudinary.com/drldzfy40/image/upload/v1724490322/YelpCamp/qmplxdetti2xt4ejejhh.png',
                 //     filename: 'YelpCamp/qmplxdetti2xt4ejejhh'
                 // }
             ]
-        });
-
-        // 如果沒有上傳圖片，則使用預設圖片
-        if (camp.images.length === 0) {
-            camp.images.push({
-                url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png', 
-                filename: 'YelpCamp/kmndhlbuaet278lte4eq'
-            });
-        }
-        
+        });     
 
         await camp.save();
     }

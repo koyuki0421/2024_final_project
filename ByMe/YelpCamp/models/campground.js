@@ -14,6 +14,7 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
+const opts = { toJSON: { virtuals: true } };  // 要打這個才可以讓虛擬schema成功執行並加上下面的opts
 
 const CampgroundSchema = new Schema({
     title: String,
@@ -30,6 +31,7 @@ const CampgroundSchema = new Schema({
             required: true
         }
     },
+    popupText: String, //自己加的
     price: Number,
     description: String,
     location: String,
@@ -43,6 +45,14 @@ const CampgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts);
+
+// 因mapbox會自動找尋properties裡面的資料，所以要設一個虛擬的schema(不用實際放入campground的schema裡)，把campground的資料放進去
+CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a><strong>
+    <p>${this.description.substring(0, 20)}...</p>`  //substring截斷，讓字最多只有20個字元
+
 });
 
 
