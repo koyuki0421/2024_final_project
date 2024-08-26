@@ -6,6 +6,9 @@ const map = new mapboxgl.Map({
     zoom: 10 // starting zoom
 });
 
+// 新增地圖右上角可以放大縮小旋轉的圖標  // https://docs.mapbox.com/mapbox-gl-js/example/navigation/
+map.addControl(new mapboxgl.NavigationControl());
+
 // 創建一個包含圖片的 HTML 元素
 const el = document.createElement('div');
 el.className = 'marker';

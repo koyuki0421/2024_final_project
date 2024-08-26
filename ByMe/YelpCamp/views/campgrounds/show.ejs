@@ -11,20 +11,20 @@
                             <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
                                 <% if (img.url.match(/\.(jpeg|jpg|png)$/)) { %>
                                     <img src="<%= img.url %>" class="d-block w-100" alt="">
-                                <% } else if (img.url.match(/\.(mp4|avi|mov)$/)) { %>
-                                    <video class="d-block w-100" controls>
-                                        <source src="<%= img.url %>" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                <% } %>
+                                    <% } else if (img.url.match(/\.(mp4|avi|mov)$/)) { %>
+                                        <video class="d-block w-100" controls>
+                                            <source src="<%= img.url %>" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <% } %>
                             </div>
-                        <% }) %>
-                    <% } else { %>
-                        <div class="carousel-item active">
-                            <img src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png"
-                                class="d-block w-100" alt="Default Image">
-                        </div>
-                    <% } %>
+                            <% }) %>
+                                <% } else { %>
+                                    <div class="carousel-item active">
+                                        <img src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png"
+                                            class="d-block w-100" alt="Default Image">
+                                    </div>
+                                    <% } %>
                 </div>
 
                 <!-- 讓照片2張以上的時候再顯示出左右滑動的控件圖示(<>) -->
@@ -71,19 +71,18 @@
                             2 days ago
                         </div>
             </div>
-
         </div>
         <div class="col-6">
-            <div id='map' style='width: 100%; height: 300px;'></div>
+            <div id='map'></div>
             <!-- 如果有登入才可以留下評論 -->
             <% if(currentUser){ %>
                 <h2>Leave a Review</h2>
                 <form action="/campgrounds/<%=campground._id%>/reviews" method="POST" class="mb-3 validated-form"
                     novalidate>
                     <!-- <div class="mb-3">
-                <label class="form-label" for="rating">Rating</label>
-                <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
-            </div> -->
+            <label class="form-label" for="rating">Rating</label>
+            <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+        </div> -->
                     <!-- review[rating] 是一種用於處理表單數據的命名方式，表物件或數據結構的名稱[物件中的一個屬性]-->
                     <fieldset class=" starability-fade">
                         <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
@@ -133,13 +132,13 @@
                                     <% } %>
                             </div>
                         </div>
-                        <% } %>
-        </div>
+                    <% } %>
+            </div>
     </div>
 
     <script>
         const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
-        const campground = <%- JSON.stringify(campground) %>
+        const campground = <% - JSON.stringify(campground) %>
     </script>
 
     <script src="/javascripts/showPageMap.js"></script>

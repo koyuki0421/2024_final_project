@@ -1,11 +1,14 @@
 // https://docs.mapbox.com/mapbox-gl-js/example/cluster/
 mapboxgl.accessToken = mapToken;
 const map = new mapboxgl.Map({
-    container: 'map',
+    container: 'cluster-map',
     style: 'mapbox://styles/mapbox/light-v10',
     center: [-103.59179687498357, 40.66995747013945],
     zoom: 3
 });
+
+// 新增地圖右上角可以放大縮小旋轉的圖標  // https://docs.mapbox.com/mapbox-gl-js/example/navigation/
+map.addControl(new mapboxgl.NavigationControl());
 
 map.on('load', function () {
     // Add a new source from our GeoJSON data and

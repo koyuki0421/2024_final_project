@@ -16,6 +16,8 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');  // 清理請求中的資料，防止惡意使用者試圖通過傳遞 MongoDB 操作符（如 $ 或 .）來進行 NoSQL 資料庫注入攻擊。
 
 
 // 設定router
@@ -51,8 +53,13 @@ app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(mongoSanitize({
+    replaceWith: '_'   // 將 $ 或 . 替換成 _。這樣可以避免惡意資料庫操作，確保應用的安全性
+}))
+
 // 設定session要給cookie的資料並存儲在 cookie 中，
 const sessionConfig = {
+    name: 'session',
     secret: 'thisshouldbeabettersecret!',
     // 用來signsession ID 的密鑰，確保session的安全性，防止session被篡改。。
     resave: false,
@@ -67,8 +74,54 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
-app.use(session(sessionConfig))
+app.use(session(sessionConfig));
 app.use(flash());
+app.use(helmet());
+
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
 
 app.use(passport.initialize());
 // 用來初始化 Passport 中間件。它是設置 Passport 在 Express 應用中進行身份驗證的第一步。
@@ -85,7 +138,6 @@ passport.deserializeUser(User.deserializeUser());
 
 // 設定通用flash中間件、local表可讓所有ejs模板中訪問
 app.use((req, res, next) => {
-    console.log(req.session)
     res.locals.currentUser = req.user; // 有權利去訪問當前user
     // req.user:是由 Passport.js 添加到請求對象 (req) 中的屬性，表示當前已經驗證的用戶。
     // 將包含該用戶的詳細信息（如用戶名、ID 等）；未通過身份驗證，則該屬性為 undefined

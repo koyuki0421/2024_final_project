@@ -1,68 +1,87 @@
 <% layout('layouts/boilerplate')%>
-<div class="row">
-    <h1 class="text-center">New Campground</h1>
-    <div class="col-6 offset-3"> <!-- offset-3表向右偏移25%，使其看起來居中 -->
-        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
-                <input class="form-control" type="text" id="title" name="campground[title]" required>
-                <!-- "campground[title]"指定該輸入字段在表單提交時的數據結構 -->
-                <!-- 會變成這樣:{"campground": {"title": "Some Title"}} -->
-                <!-- required 是為了要把關驗證每個欄位都要填寫，不可為空值 -->
-                <div class="valid-feedback">
-                <!-- 想要給的驗證ok回復 -->
-                    Looks good!
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="campground[location]" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
-            <!-- <div class="mb-3">
+
+    <style>  /* 自己加的 */
+        body {
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.299), rgba(255, 255, 255, 0.299)),
+                /* 讓圖片背景再加上一點顏色 */
+                url('https://images.unsplash.com/photo-1559521783-1d1599583485?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+    <div class="row">
+        <h1 class="text-center" style="margin-bottom: 30px;">New Campground</h1>
+        <div class="col-md-6 offset-md-3"> <!-- offset-3表向右偏移25%，使其看起來居中 -->
+            <div class="card shadow">
+                <div class="card-body">
+                    <form action="/campgrounds" method="POST" novalidate class="validated-form"
+                        enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" for="title">Title</label>
+                            <input class="form-control" type="text" id="title" name="campground[title]" required>
+                            <!-- "campground[title]"指定該輸入字段在表單提交時的數據結構 -->
+                            <!-- 會變成這樣:{"campground": {"title": "Some Title"}} -->
+                            <!-- required 是為了要把關驗證每個欄位都要填寫，不可為空值 -->
+                            <div class="valid-feedback">
+                                <!-- 想要給的驗證ok回復 -->
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="location">Location</label>
+                            <input class="form-control" type="text" id="location" name="campground[location]" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <!-- <div class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" id="image" name="campground[image]" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div> -->
-            <div class="mb-3">
-                <label class="form-label" for="price">Campground Price</label>
-                <div class="input-group">
-                    <span class="input-group-text" id="price-label">$</span>
-                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
-                        aria-describedby="price-label" name="campground[price]" required>
-                    <!-- aria-label="price"用於讓屏幕閱讀器讀出這個名稱。 -->
-                    <!-- input的aria-describedby="price-label"是為了跟span的id連接 -->
-                </div>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="price">Campground Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="price-label">$</span>
+                                <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                                    aria-describedby="price-label" name="campground[price]" required>
+                                <!-- aria-label="price"用於讓屏幕閱讀器讀出這個名稱。 -->
+                                <!-- input的aria-describedby="price-label"是為了跟span的id連接 -->
+                            </div>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" name="campground[description]"
-                    required></textarea>
-                <div class="valid-feedback">
-                    Looks good!
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" type="text" id="description" name="campground[description]"
+                                required></textarea>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-file custom-file">
+                                <!-- https://getbootstrap.com/docs/5.3/forms/input-group/#custom-file-input -->
+                                <input type="file" class="form-file-input" id="image" name="image" multiple>
+                                <label class="form-file-label" for="image">
+                                    <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                                    <span class="form-file-button">Browse</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-success">Add Campground</button>
+                        </div>
+                    </form>
+                    <a href="/campgrounds">All Campgrounds</a>
                 </div>
             </div>
-            <div class="mb-3">
-                <div class="form-file custom-file"> <!-- https://getbootstrap.com/docs/5.3/forms/input-group/#custom-file-input -->
-                    <input type="file" class="form-file-input" id="image" name="image" multiple>
-                    <label class="form-file-label" for="image">
-                        <span class="form-file-text custom-file-label">Choose image(s)...</span>
-                        <span class="form-file-button">Browse</span>
-                    </label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <button class="btn btn-success">Add Campground</button>
-            </div>
-        </form>
-        <a href="/campgrounds">All Campgrounds</a>
+        </div>
     </div>
-</div>
