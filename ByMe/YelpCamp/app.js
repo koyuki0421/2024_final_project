@@ -21,6 +21,8 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');  // 清理請求中的資料，防止惡意使用者試圖通過傳遞 MongoDB 操作符（如 $ 或 .）來進行 NoSQL 資料庫注入攻擊。
 
+// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+// const dbUrl = process.env.DB_URL;  // 部屬的時候用
 
 // 設定router
 const userRoutes = require('./routes/users');
@@ -29,8 +31,8 @@ const reviewRoutes = require('./routes/reviews');
 
 // 連線mongoosDB = yelp-camp
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
     // useCreateIndex: true,
     // 因為跳出錯訊息所以用掉:connection error: MongoParseError: option usecreateindex is not supported
     // useFindAndModify: false
@@ -178,3 +180,7 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
     console.log('Serving on port 3000')
 })
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => {
+//     console.log(`Serving on port ${port}`)
+// })
