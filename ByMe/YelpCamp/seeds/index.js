@@ -44,13 +44,9 @@ const seedDB = async () => {
             },
             images: [
                 {
-                    url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png', 
-                    filename: 'YelpCamp/kmndhlbuaet278lte4eq'
+                    url: 'https://res.cloudinary.com/drldzfy40/image/upload/v1724750674/YelpCamp/ajx03aefwrmim0b8xcfz.jpg',
+                    filename: 'YelpCamp/qmplxdetti2xt4ejejhh'
                 }
-                // {
-                //     url: 'https://res.cloudinary.com/drldzfy40/image/upload/v1724490322/YelpCamp/qmplxdetti2xt4ejejhh.png',
-                //     filename: 'YelpCamp/qmplxdetti2xt4ejejhh'
-                // }
             ]
         });     
 

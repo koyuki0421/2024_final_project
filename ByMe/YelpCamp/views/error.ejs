@@ -1,13 +1,17 @@
 <% layout('layouts/boilerplate')%>
 <div class="row">
     <div class="col-6 offset-3">
-        <div class="alert alert-danger" role="alert" style="word-wrap: break-word;">
+        <div class="alert alert-danger" role="alert" style="word-wrap: break-word;">   <!-- word-wrap: break-word; 表長字換行 -->
             <h4 class="alert-heading"><%=err.message%></h4>
-            <% if (process.env.NODE_ENV !== "production") { %>
+            <% if (process.env.NODE_ENV !== "production") { %>   <!-- 因此用戶不會看到詳細的錯誤信息，這有助於保護應用的安全性。 -->
             <p><%= err.stack %></p>
             <% } %>
         </div>
     </div>
 </div>
+
 <!-- err.stack出於開發目的，用堆疊追蹤 -->
- <!-- word-wrap: break-word; 表長字換行 -->
+<!-- "development"：開發環境，用於本地開發和測試。 -->
+<!-- "production"：生產環境，用於上線後的應用，面向最終用戶。 -->
+
+

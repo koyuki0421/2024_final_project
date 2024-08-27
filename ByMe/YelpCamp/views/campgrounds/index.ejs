@@ -8,7 +8,6 @@
     <div class="card mb-3">
         <div class="row">
             <div class="col-md-4">
-                <%if(campground.images.length) {%>
                 <% if (campground.images[0].url.match(/\.(jpeg|jpg|png)$/)) { %>
                     <!-- 如果是圖片，顯示圖片 -->
                     <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
@@ -19,10 +18,7 @@
                         Your browser does not support the video tag.
                     </video>
                 <% } %>
-                <% }else {%> <!-- 如果沒有上傳圖片或影片，顯示預設圖片 -->
-                    <img class="img-fluid" alt=""
-                        src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png">
-                    <% } %>
+                
             </div>
             <div class="col-md-8">
                 <div class="card-body">

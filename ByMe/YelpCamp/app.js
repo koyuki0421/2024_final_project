@@ -1,4 +1,6 @@
 // 用來在開發環境中載入環境變數，有development（開發環境）或production（生產環境）
+// "development"：開發環境，用於本地開發和測試。
+// "production"：生產環境，用於上線後的應用，面向最終用戶。
 // 若次開發環境的話，會載入 dotenv 模組並執行它的 config() 方法
 if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
@@ -61,14 +63,14 @@ app.use(mongoSanitize({
 const sessionConfig = {
     name: 'session',
     secret: 'thisshouldbeabettersecret!',
-    // 用來signsession ID 的密鑰，確保session的安全性，防止session被篡改。。
+    // 用來signsession ID 的密鑰，確保session的安全性，防止session被篡改。
     resave: false,
     // 在請求期間session沒有被修改，則不會強制保存會話。
     saveUninitialized: true,
     // 設置為 true 意味著即使session未被修改，也會將其存儲。這通常用於在訪客追蹤或分析等情況下。
     cookie: {
         httpOnly: true,
-        // 設定安全性:就算使用者造訪有缺陷的網站，cookieu也不會將資料洩漏給此網站
+        // 設定安全性:就算使用者造訪有缺陷的網站，cookie也不會將資料洩漏給此網站
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         // 算一周後的日期:.now()是毫秒+一分鐘有1000毫秒*一分鐘有60秒...
         maxAge: 1000 * 60 * 60 * 24 * 7
@@ -115,8 +117,10 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/douqbebwk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://res.cloudinary.com/drldzfy40/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!要是自己的cloudinary name
                 "https://images.unsplash.com/",
+                "https://cdn-icons-png.flaticon.com/", // 自己加的
+                "https://plus.unsplash.com/",  // 自己加的
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
