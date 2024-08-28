@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', true); // 預防在git上有警告訊息跳出來
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoStore = require("connect-mongo")(session);  //儲存session的地方
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -21,8 +22,9 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');  // 清理請求中的資料，防止惡意使用者試圖通過傳遞 MongoDB 操作符（如 $ 或 .）來進行 NoSQL 資料庫注入攻擊。
 
-// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';  // 部屬的時候用
 // const dbUrl = process.env.DB_URL;  // 部屬的時候用
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 
 // 設定router
 const userRoutes = require('./routes/users');
@@ -30,7 +32,7 @@ const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 
 // 連線mongoosDB = yelp-camp
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect(dbUrl, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true,
     // useCreateIndex: true,
@@ -61,8 +63,22 @@ app.use(mongoSanitize({
     replaceWith: '_'   // 將 $ 或 . 替換成 _。這樣可以避免惡意資料庫操作，確保應用的安全性
 }))
 
+// const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
+const store = new MongoStore({  //使用mongo來儲存session資訊
+    url: dbUrl,
+    touchAfter: 24 * 60 * 60, //24小時*分鐘*秒，touchAfter表在請求期間session沒有被修改，則不會強制保存會話。
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
 // 設定session要給cookie的資料並存儲在 cookie 中，
 const sessionConfig = {
+    store,
     name: 'session',
     secret: 'thisshouldbeabettersecret!',
     // 用來signsession ID 的密鑰，確保session的安全性，防止session被篡改。
