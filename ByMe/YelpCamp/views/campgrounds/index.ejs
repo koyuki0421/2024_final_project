@@ -8,16 +8,20 @@
     <div class="card mb-3">
         <div class="row">
             <div class="col-md-4">
-                <% if (campground.images[0].url.match(/\.(jpeg|jpg|png)$/)) { %>
-                    <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
-                <% } else if (campground.images[0].url.match(/\.(mp4|avi|mov)$/)) { %>
-                    <video class="img-fluid" controls>
-                        <source src="<%= campground.images[0].url %>" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                <% } %>
-                
+                    <% if (campground.images.length > 0) { %>
+                        <% if (campground.images[0].url.match(/\.(jpeg|jpg|png)$/)) { %>
+                            <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
+                        <% } else if (campground.images[0].url.match(/\.(mp4|avi|mov)$/)) { %>
+                            <video class="img-fluid" controls>
+                                <source src="<%= campground.images[0].url %>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        <% } %>
+                    <% } else { %>
+                        <img class="img-fluid" alt="" src="https://res.cloudinary.com/drldzfy40/image/upload/v1724750674/YelpCamp/ajx03aefwrmim0b8xcfz.jpg">
+                    <% } %>
             </div>
+            
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title"><%= campground.title %> </h5>

@@ -5,20 +5,25 @@
         <div class="col-6"> <!-- https://getbootstrap.com/docs/5.3/components/carousel/ -->
             <div id="campgroundCarousel" class="carousel slide">
                 <div class="carousel-inner">
-                    
-                        <% campground.images.forEach((img, i)=> { %>
-                            <!-- i表index，當index為0時，添加active class，否則就什麼都不加 -->
-                            <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
-                                <% if (img.url.match(/\.(jpeg|jpg|png)$/)) { %>
-                                    <img crossorigin="anonymous" src="<%= img.url %>" class="d-block w-100" alt="">
-                                    <% } else if (img.url.match(/\.(mp4|avi|mov)$/)) { %>
-                                        <video class="d-block w-100" controls>
-                                            <source src="<%= img.url %>" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
+                            <% if (campground.images.length > 0) { %>
+                                <% campground.images.forEach((img, i) => { %>
+                                    <!-- i表index，當index為0時，添加active class，否則就什麼都不加 -->
+                                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                                        <% if (img.url.match(/\.(jpeg|jpg|png)$/)) { %>
+                                            <img crossorigin="anonymous" src="<%= img.url %>" class="d-block w-100" alt="">
+                                        <% } else if (img.url.match(/\.(mp4|avi|mov)$/)) { %>
+                                            <video class="d-block w-100" controls>
+                                                <source src="<%= img.url %>" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
                                         <% } %>
-                            </div>
-                            <% }) %>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="carousel-item active"> <!-- 讓預設圖片為active -->
+                                    <img crossorigin="anonymous" src="https://res.cloudinary.com/drldzfy40/image/upload/v1724750674/YelpCamp/ajx03aefwrmim0b8xcfz.jpg" class="d-block w-100" alt="">
+                                </div>
+                            <% } %> 
                                 
                 </div>
 
