@@ -9,10 +9,8 @@
         <div class="row">
             <div class="col-md-4">
                 <% if (campground.images[0].url.match(/\.(jpeg|jpg|png)$/)) { %>
-                    <!-- 如果是圖片，顯示圖片 -->
                     <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
                 <% } else if (campground.images[0].url.match(/\.(mp4|avi|mov)$/)) { %>
-                    <!-- 如果是影片，顯示影片 -->
                     <video class="img-fluid" controls>
                         <source src="<%= campground.images[0].url %>" type="video/mp4">
                         Your browser does not support the video tag.
