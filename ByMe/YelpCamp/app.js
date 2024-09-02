@@ -22,9 +22,9 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');  // 清理請求中的資料，防止惡意使用者試圖通過傳遞 MongoDB 操作符（如 $ 或 .）來進行 NoSQL 資料庫注入攻擊。
 
-// const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';  // 部屬的時候用
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';  // 部屬的時候用
 // const dbUrl = process.env.DB_URL;  // 部屬的時候用
-const dbUrl = 'mongodb://localhost:27017/yelp-camp';
+// const dbUrl = 'mongodb://localhost:27017/yelp-camp';
 
 // 設定router
 const userRoutes = require('./routes/users');
